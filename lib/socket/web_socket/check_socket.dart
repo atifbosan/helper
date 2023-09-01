@@ -1,11 +1,9 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:test1/models/message_model.dart';
 import 'package:web_socket_channel/io.dart';
 
 class WebsocketDemo extends StatefulWidget {
   const WebsocketDemo({Key? key}) : super(key: key);
-
   @override
   State<WebsocketDemo> createState() => _WebsocketDemoState();
 }
@@ -45,7 +43,6 @@ class _WebsocketDemoState extends State<WebsocketDemo> {
     channel2.stream.listen((data) {
       print("Channel: Check Channel Connected: ${channel2.protocol}");
       print("Channel: Check Channel Connected: ${channel2.ready}");
-
       print('_WebsocketDemoState.streamListener2: $data');
       // channel.sink.add('received!');
       // channel.sink.close(status.goingAway);

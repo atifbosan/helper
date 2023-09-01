@@ -4,14 +4,14 @@ import 'package:test1/models/message_model.dart';
 import 'package:test1/widgets/own_mesage_card.dart';
 import 'package:test1/widgets/reply_card.dart';
 
-class chat_view extends StatefulWidget {
-  chat_view({Key? key}) : super(key: key);
+class ChatView extends StatefulWidget {
+  ChatView({Key? key}) : super(key: key);
 
   @override
-  _chat_viewState createState() => _chat_viewState();
+  _ChatViewState createState() => _ChatViewState();
 }
 
-class _chat_viewState extends State<chat_view> {
+class _ChatViewState extends State<ChatView> {
   bool show = false;
   int mySourceID = 1;
   int targetID = 2;
@@ -20,14 +20,8 @@ class _chat_viewState extends State<chat_view> {
   List<MessageModel> messages = [];
   TextEditingController _controller = TextEditingController();
   ScrollController _scrollController = ScrollController();
-  //IO.Socket socket = IO.io("http://192.168.213.126:3000",<String, dynamic>{
-  //       "transports": ["websocket"],
-  //       "autoConnect": false,});
-  late IO.Socket
-      socket; /*= IO.io("http://192.168.213.126:3000", <String, dynamic>{
-    "transports": ["websocket"],
-    "autoConnect": false,
-  });*/
+
+  late IO.Socket socket;
   @override
   void initState() {
     super.initState();
@@ -49,7 +43,7 @@ class _chat_viewState extends State<chat_view> {
       "autoConnect": false,
     });
 
-    socket.connect().id;
+    socket.connect();
     socket.emit("signin", mySourceID);
     socket.onConnect((data) {
       print("Connected");
@@ -83,286 +77,262 @@ class _chat_viewState extends State<chat_view> {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        /* Image.asset(
-          "assets/whatsapp_Back.png",
-          height: MediaQuery.of(context).size.height,
-          width: MediaQuery.of(context).size.width,
-          fit: BoxFit.cover,
-        ),*/
-        Scaffold(
-          // backgroundColor: Colors.transparent,
-          appBar: PreferredSize(
-            preferredSize: Size.fromHeight(60),
-            child: AppBar(
-              leadingWidth: 70,
-              titleSpacing: 0,
-              leading: InkWell(
-                onTap: () {
-                  Navigator.pop(context);
-                },
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(
-                      Icons.arrow_back,
-                      size: 24,
-                    ),
-                    /*  CircleAvatar(
-                      child: SvgPicture.asset(
-                        widget.chatModel.isGroup
-                            ? "assets/groups.svg"
-                            : "assets/person.svg",
-                        color: Colors.white,
-                        height: 36,
-                        width: 36,
-                      ),
-                      radius: 20,
-                      backgroundColor: Colors.blueGrey,
-                    ),*/
-                  ],
-                ),
-              ),
-              title: InkWell(
-                onTap: () {},
-                child: Container(
-                  margin: EdgeInsets.all(6),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "A",
-                        style: TextStyle(
-                          fontSize: 18.5,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      Text(
-                        "last seen today at 12:05",
-                        style: TextStyle(
-                          fontSize: 13,
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-              ),
-              actions: [
-                IconButton(icon: Icon(Icons.videocam), onPressed: () {}),
-                IconButton(icon: Icon(Icons.call), onPressed: () {}),
-                PopupMenuButton<String>(
-                  padding: EdgeInsets.all(0),
-                  onSelected: (value) {
-                    print(value);
-                  },
-                  itemBuilder: (BuildContext contesxt) {
-                    return [
-                      PopupMenuItem(
-                        child: Text("View Contact"),
-                        value: "View Contact",
-                      ),
-                      PopupMenuItem(
-                        child: Text("Media, links, and docs"),
-                        value: "Media, links, and docs",
-                      ),
-                      PopupMenuItem(
-                        child: Text("Whatsapp Web"),
-                        value: "Whatsapp Web",
-                      ),
-                      PopupMenuItem(
-                        child: Text("Search"),
-                        value: "Search",
-                      ),
-                      PopupMenuItem(
-                        child: Text("Mute Notification"),
-                        value: "Mute Notification",
-                      ),
-                      PopupMenuItem(
-                        child: Text("Wallpaper"),
-                        value: "Wallpaper",
-                      ),
-                    ];
-                  },
+    return Scaffold(
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(60),
+        child: AppBar(
+          leadingWidth: 70,
+          titleSpacing: 0,
+          leading: InkWell(
+            onTap: () {
+              Navigator.pop(context);
+            },
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.arrow_back,
+                  size: 24,
                 ),
               ],
             ),
           ),
-          body: Container(
-            height: MediaQuery.of(context).size.height,
-            width: MediaQuery.of(context).size.width,
-            child: WillPopScope(
+          title: InkWell(
+            onTap: () {},
+            child: Container(
+              margin: EdgeInsets.all(6),
               child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Expanded(
-                    // height: MediaQuery.of(context).size.height - 150,
-                    child: ListView.builder(
-                      shrinkWrap: true,
-                      controller: _scrollController,
-                      itemCount: messages.length + 1,
-                      itemBuilder: (context, index) {
-                        if (index == messages.length) {
-                          return Container(
-                            height: 70,
-                          );
-                        }
-                        if (messages[index].type == "source") {
-                          return OwnMessageCard(
-                            message: messages[index].message,
-                            time: messages[index].time,
-                          );
-                        } else {
-                          return ReplyCard(
-                            message: messages[index].message,
-                            time: messages[index].time,
-                          );
-                        }
-                      },
+                  Text(
+                    "A",
+                    style: TextStyle(
+                      fontSize: 18.5,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
-                  Align(
-                    alignment: Alignment.bottomCenter,
-                    child: Container(
-                      height: 70,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          Row(
-                            children: [
-                              Container(
-                                width: MediaQuery.of(context).size.width - 60,
-                                child: Card(
-                                  margin: EdgeInsets.only(
-                                      left: 2, right: 2, bottom: 8),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(25),
-                                  ),
-                                  child: TextFormField(
-                                    controller: _controller,
-                                    focusNode: focusNode,
-                                    textAlignVertical: TextAlignVertical.center,
-                                    keyboardType: TextInputType.multiline,
-                                    maxLines: 5,
-                                    minLines: 1,
-                                    onChanged: (value) {
-                                      if (value.length > 0) {
-                                        setState(() {
-                                          sendButton = true;
-                                        });
-                                      } else {
-                                        setState(() {
-                                          sendButton = false;
-                                        });
-                                      }
-                                    },
-                                    decoration: InputDecoration(
-                                      border: InputBorder.none,
-                                      hintText: "Type a message",
-                                      hintStyle: TextStyle(color: Colors.grey),
-                                      prefixIcon: IconButton(
-                                        icon: Icon(
-                                          show
-                                              ? Icons.keyboard
-                                              : Icons.emoji_emotions_outlined,
-                                        ),
-                                        onPressed: () {
-                                          if (!show) {
-                                            focusNode.unfocus();
-                                            focusNode.canRequestFocus = false;
-                                          }
-                                          setState(() {
-                                            show = !show;
-                                          });
-                                        },
-                                      ),
-                                      suffixIcon: Row(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          IconButton(
-                                            icon: Icon(Icons.attach_file),
-                                            onPressed: () {
-                                              showModalBottomSheet(
-                                                  backgroundColor:
-                                                      Colors.transparent,
-                                                  context: context,
-                                                  builder: (builder) =>
-                                                      bottomSheet());
-                                            },
-                                          ),
-                                          IconButton(
-                                            icon: Icon(Icons.camera_alt),
-                                            onPressed: () {
-                                              // Navigator.push(
-                                              //     context,
-                                              //     MaterialPageRoute(
-                                              //         builder: (builder) =>
-                                              //             CameraApp()));
-                                            },
-                                          ),
-                                        ],
-                                      ),
-                                      contentPadding: EdgeInsets.all(5),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(
-                                  bottom: 8,
-                                  right: 2,
-                                  left: 2,
-                                ),
-                                child: CircleAvatar(
-                                  radius: 25,
-                                  backgroundColor: Color(0xFF128C7E),
-                                  child: IconButton(
-                                    icon: Icon(
-                                      sendButton ? Icons.send : Icons.mic,
-                                      color: Colors.white,
-                                    ),
-                                    onPressed: () {
-                                      if (sendButton) {
-                                        _scrollController.animateTo(
-                                            _scrollController
-                                                .position.maxScrollExtent,
-                                            duration:
-                                                Duration(milliseconds: 300),
-                                            curve: Curves.easeOut);
-                                        sendMessage(_controller.text,
-                                            mySourceID, targetID);
-                                        _controller.clear();
-                                        setState(() {
-                                          sendButton = false;
-                                        });
-                                      }
-                                    },
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                          show ? Container() : Container(),
-                        ],
-                      ),
+                  Text(
+                    "last seen today at 12:05",
+                    style: TextStyle(
+                      fontSize: 13,
                     ),
-                  ),
+                  )
                 ],
               ),
-              onWillPop: () {
-                if (show) {
-                  setState(() {
-                    show = false;
-                  });
-                } else {
-                  Navigator.pop(context);
-                }
-                return Future.value(false);
-              },
             ),
           ),
+          actions: [
+            IconButton(icon: Icon(Icons.videocam), onPressed: () {}),
+            IconButton(icon: Icon(Icons.call), onPressed: () {}),
+            PopupMenuButton<String>(
+              padding: EdgeInsets.all(0),
+              onSelected: (value) {
+                print(value);
+              },
+              itemBuilder: (BuildContext contesxt) {
+                return [
+                  PopupMenuItem(
+                    child: Text("View Contact"),
+                    value: "View Contact",
+                  ),
+                  PopupMenuItem(
+                    child: Text("Media, links, and docs"),
+                    value: "Media, links, and docs",
+                  ),
+                  PopupMenuItem(
+                    child: Text("Whatsapp Web"),
+                    value: "Whatsapp Web",
+                  ),
+                  PopupMenuItem(
+                    child: Text("Search"),
+                    value: "Search",
+                  ),
+                  PopupMenuItem(
+                    child: Text("Mute Notification"),
+                    value: "Mute Notification",
+                  ),
+                  PopupMenuItem(
+                    child: Text("Wallpaper"),
+                    value: "Wallpaper",
+                  ),
+                ];
+              },
+            ),
+          ],
         ),
-      ],
+      ),
+      body: Container(
+        height: MediaQuery.of(context).size.height,
+        width: MediaQuery.of(context).size.width,
+        child: WillPopScope(
+          child: Column(
+            children: [
+              Expanded(
+                // height: MediaQuery.of(context).size.height - 150,
+                child: ListView.builder(
+                  shrinkWrap: true,
+                  controller: _scrollController,
+                  itemCount: messages.length + 1,
+                  itemBuilder: (context, index) {
+                    if (index == messages.length) {
+                      return Container(
+                        height: 70,
+                      );
+                    }
+                    if (messages[index].type == "source") {
+                      return OwnMessageCard(
+                        message: messages[index].message,
+                        time: messages[index].time,
+                      );
+                    } else {
+                      return ReplyCard(
+                        message: messages[index].message,
+                        time: messages[index].time,
+                      );
+                    }
+                  },
+                ),
+              ),
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: Container(
+                  height: 70,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Row(
+                        children: [
+                          Container(
+                            width: MediaQuery.of(context).size.width - 60,
+                            child: Card(
+                              margin:
+                                  EdgeInsets.only(left: 2, right: 2, bottom: 8),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(25),
+                              ),
+                              child: TextFormField(
+                                controller: _controller,
+                                focusNode: focusNode,
+                                textAlignVertical: TextAlignVertical.center,
+                                keyboardType: TextInputType.multiline,
+                                maxLines: 5,
+                                minLines: 1,
+                                onChanged: (value) {
+                                  if (value.length > 0) {
+                                    setState(() {
+                                      sendButton = true;
+                                    });
+                                  } else {
+                                    setState(() {
+                                      sendButton = false;
+                                    });
+                                  }
+                                },
+                                decoration: InputDecoration(
+                                  border: InputBorder.none,
+                                  hintText: "Type a message",
+                                  hintStyle: TextStyle(color: Colors.grey),
+                                  prefixIcon: IconButton(
+                                    icon: Icon(
+                                      show
+                                          ? Icons.keyboard
+                                          : Icons.emoji_emotions_outlined,
+                                    ),
+                                    onPressed: () {
+                                      if (!show) {
+                                        focusNode.unfocus();
+                                        focusNode.canRequestFocus = false;
+                                      }
+                                      setState(() {
+                                        show = !show;
+                                      });
+                                    },
+                                  ),
+                                  suffixIcon: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      IconButton(
+                                        icon: Icon(Icons.attach_file),
+                                        onPressed: () {
+                                          showModalBottomSheet(
+                                              backgroundColor:
+                                                  Colors.transparent,
+                                              context: context,
+                                              builder: (builder) =>
+                                                  bottomSheet());
+                                        },
+                                      ),
+                                      IconButton(
+                                        icon: Icon(Icons.camera_alt),
+                                        onPressed: () {
+                                          // Navigator.push(
+                                          //     context,
+                                          //     MaterialPageRoute(
+                                          //         builder: (builder) =>
+                                          //             CameraApp()));
+                                        },
+                                      ),
+                                    ],
+                                  ),
+                                  contentPadding: EdgeInsets.all(5),
+                                ),
+                              ),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(
+                              bottom: 8,
+                              right: 2,
+                              left: 2,
+                            ),
+                            child: CircleAvatar(
+                              radius: 25,
+                              backgroundColor: Color(0xFF128C7E),
+                              child: IconButton(
+                                icon: Icon(
+                                  sendButton ? Icons.send : Icons.mic,
+                                  color: Colors.white,
+                                ),
+                                onPressed: () {
+                                  if (sendButton) {
+                                    _scrollController.animateTo(
+                                        _scrollController
+                                            .position.maxScrollExtent,
+                                        duration: Duration(milliseconds: 300),
+                                        curve: Curves.easeOut);
+                                    sendMessage(
+                                        _controller.text, mySourceID, targetID);
+                                    _controller.clear();
+                                    setState(() {
+                                      sendButton = false;
+                                    });
+                                  }
+                                },
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      show ? Container() : Container(),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+          onWillPop: () {
+            if (show) {
+              setState(() {
+                show = false;
+              });
+            } else {
+              Navigator.pop(context);
+            }
+            return Future.value(false);
+          },
+        ),
+      ),
     );
   }
 
